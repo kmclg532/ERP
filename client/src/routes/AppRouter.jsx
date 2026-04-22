@@ -5,9 +5,9 @@ import { ProtectedRoute } from '../components/ProtectedRoute.jsx';
 
 // Pages
 import Dashboard from '../pages/dashboard/Dashboard.jsx';
-import Profile from '../pages/profile/Profile.jsx';
+import Profile from '../pages/Profile.jsx';
 import Login from '../pages/auth/Login.jsx';
-import Settings from '../pages/settings/Settings.jsx';
+import Settings from '../pages/Settings.jsx';
 
 export default function AppRouter() {
   return (

@@ -6,24 +6,24 @@ import MainLayout from '../layouts/MainLayout.jsx';
 
 import Login from '../pages/auth/Login.jsx';
 import Dashboard from '../pages/dashboard/Dashboard.jsx';
-import ClassRoutine from '../pages/class-routine/ClassRoutine.jsx';
-import Attendance from '../pages/attendance/Attendance.jsx';
-import Assignment from '../pages/assignment/Assignment.jsx';
-import AcademicCalendar from '../pages/calendar/AcademicCalendar.jsx';
-import Examination from '../pages/examination/Examination.jsx';
-import Result from '../pages/result/Result.jsx';
-import Quiz from '../pages/quiz/Quiz.jsx';
-import SubjectPlanner from '../pages/subject-planner/SubjectPlanner.jsx';
-import Feedback from '../pages/feedback/Feedback.jsx';
+import ClassRoutine from '../pages/ClassRoutine.jsx';
+import Attendance from '../pages/Attendance.jsx';
+import Assignment from '../pages/Assignment.jsx';
+import AcademicCalendar from '../pages/AcademicCalendar.jsx';
+import Examination from '../pages/Examination.jsx';
+import Result from '../pages/Result.jsx';
+import Quiz from '../pages/Quiz.jsx';
+import SubjectPlanner from '../pages/SubjectPlanner.jsx';
+import Feedback from '../pages/Feedback.jsx';
 import ResolvedFeedback from '../pages/resolved-feedback.jsx';
 import Activity from '../pages/activity.jsx';
 import StudentSection from '../pages/student-section.jsx';
-import Fees from '../pages/fees/Fees.jsx';
-import Notice from '../pages/notice/Notice.jsx';
-import Notifications from '../pages/notifications/Notifications.jsx';
-import Downloads from '../pages/downloads/Downloads.jsx';
-import Profile from '../pages/profile/Profile.jsx';
-import Settings from '../pages/settings/Settings.jsx';
+import Fees from '../pages/Fees.jsx';
+import Notice from '../pages/Notice.jsx';
+import Notifications from '../pages/Notifications.jsx';
+import Downloads from '../pages/Downloads.jsx';
+import Profile from '../pages/Profile.jsx';
+import Settings from '../pages/Settings.jsx';
 
 export default function AppRoutes() {
   return (

@@ -1,4 +1,4 @@
-import { useAuth } from '../../hooks/useAuth.js';
+import { useAuth } from '../hooks/useAuth.js';
 
 export default function Profile() {
   const { user } = useAuth();
