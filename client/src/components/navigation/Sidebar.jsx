@@ -85,7 +85,7 @@ const navLinkClassName = ({ isActive }) =>
 
 export default function Sidebar() {
   return (
-    <aside className="w-64 shrink-0 border-r border-(--border-color) bg-(--sidebar-bg) px-4 py-5">
+    <aside className="w-64 shrink-0 border-r border-(--border-color) bg-(--sidebar-bg) px-4 py-5 overscroll-contain">
       <div className="mb-6 rounded-2xl border border-(--border-color) bg-(--surface) p-4 shadow-sm">
         <p className="text-xs font-medium uppercase tracking-[0.18em] text-(--text-tertiary)">
           University ERP
