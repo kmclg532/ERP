@@ -19,6 +19,12 @@ import {
   DollarSign,
   ClipboardList,
   Download,
+  MessageCircle,
+  CheckCircle,
+  PieChart,
+  Users,
+  Activity,
+  IndianRupee,
 } from 'lucide-react';
 
 const navigationItems = [
@@ -27,10 +33,18 @@ const navigationItems = [
   { label: 'Attendance', path: '/attendance', icon: CheckSquare },
   { label: 'Assignment', path: '/assignment', icon: FileText },
   { label: 'Calendar', path: '/calendar', icon: Calendar },
-  { label: 'Quiz', path: '/quiz', icon: HelpCircle },
+  { label: 'Examination', path: '/examination', icon: HelpCircle },
+  { label: 'Result', path: '/result', icon: CheckCircle },
+  { label: 'Quiz', path: '/quiz', icon: PieChart },
   { label: 'Fees', path: '/fees', icon: DollarSign },
   { label: 'Notice', path: '/notice', icon: ClipboardList },
+  { label: 'Notifications', path: '/notifications', icon: Bell },
   { label: 'Downloads', path: '/downloads', icon: Download },
+  { label: 'Feedback', path: '/feedback', icon: MessageCircle },
+  { label: 'Resolved Feedback', path: '/resolved-feedback', icon: CheckCircle },
+  { label: 'Subject Planner', path: '/subject-planner', icon: BookOpen },
+  { label: '100 Point Activity', path: '/activity', icon: Activity },
+  { label: 'Student Section', path: '/student-section', icon: Users },
 ];
 
 function SidebarContent({ collapsed, navItemClass }) {
@@ -134,12 +148,20 @@ export default function ModernLayout({ children }) {
             </button>
 
             {/* Settings */}
-            <button className="rounded-lg p-2 text-(--text-secondary) transition hover:bg-(--dropdown-hover) hover:text-(--text-primary)">
+            <button
+              onClick={() => navigate('/settings')}
+              className="rounded-lg p-2 text-(--text-secondary) transition hover:bg-(--dropdown-hover) hover:text-(--text-primary)"
+              title="Settings"
+            >
               <Settings className="h-5 w-5" />
             </button>
 
             {/* Profile */}
-            <div className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-(--dropdown-hover)">
+            <button
+              onClick={() => navigate('/my-profile')}
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-(--text-secondary) transition hover:bg-(--dropdown-hover) hover:text-(--text-primary)"
+              title="Profile"
+            >
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-(--color-primary) text-xs font-semibold text-(--color-on-primary)">
                 {initials}
               </div>
@@ -151,7 +173,7 @@ export default function ModernLayout({ children }) {
                   {user?.role || 'Student'}
                 </p>
               </div>
-            </div>
+            </button>
           </div>
 
           {/* Right Side - Mobile */}
@@ -222,7 +244,11 @@ export default function ModernLayout({ children }) {
                 <Moon className="h-5 w-5" />
               )}
             </button>
-            <button className="rounded-lg p-2 text-(--text-secondary) transition hover:bg-(--dropdown-hover)">
+            <button
+              onClick={() => navigate('/settings')}
+              className="rounded-lg p-2 text-(--text-secondary) transition hover:bg-(--dropdown-hover)"
+              title="Settings"
+            >
               <Settings className="h-5 w-5" />
             </button>
           </div>
@@ -241,11 +267,17 @@ export default function ModernLayout({ children }) {
 
         {/* Drawer Footer - Profile & Logout */}
         <div className="absolute bottom-0 left-0 right-0 border-t border-(--border-color) bg-(--surface) p-4">
-          <div className="mb-4 flex items-center gap-3 rounded-lg border border-(--border-color) p-3">
+          <button
+            onClick={() => {
+              navigate('/my-profile');
+              setDrawerOpen(false);
+            }}
+            className="mb-4 w-full flex items-center gap-3 rounded-lg border border-(--border-color) p-3 text-(--text-secondary) transition hover:bg-(--dropdown-hover) hover:text-(--text-primary)"
+          >
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-(--color-primary) text-sm font-semibold text-(--color-on-primary)">
               {initials}
             </div>
-            <div>
+            <div className="text-left">
               <p className="text-sm font-medium text-(--text-primary)">
                 {user?.firstName || 'User'}
               </p>
@@ -253,7 +285,7 @@ export default function ModernLayout({ children }) {
                 {user?.role || 'Student'}
               </p>
             </div>
-          </div>
+          </button>
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}

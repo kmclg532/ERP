@@ -15,7 +15,9 @@ import Result from '../pages/result/Result.jsx';
 import Quiz from '../pages/quiz/Quiz.jsx';
 import SubjectPlanner from '../pages/subject-planner/SubjectPlanner.jsx';
 import Feedback from '../pages/feedback/Feedback.jsx';
-import ContactActivity from '../pages/contact-activity/ContactActivity.jsx';
+import ResolvedFeedback from '../pages/resolved-feedback.jsx';
+import Activity from '../pages/activity.jsx';
+import StudentSection from '../pages/student-section.jsx';
 import Fees from '../pages/fees/Fees.jsx';
 import Notice from '../pages/notice/Notice.jsx';
 import Notifications from '../pages/notifications/Notifications.jsx';
@@ -48,7 +50,9 @@ export default function AppRoutes() {
               <Route path="/quiz" element={<Quiz />} />
               <Route path="/subject-planner" element={<SubjectPlanner />} />
               <Route path="/feedback" element={<Feedback />} />
-              <Route path="/contact-activity" element={<ContactActivity />} />
+              <Route path="/resolved-feedback" element={<ResolvedFeedback />} />
+              <Route path="/activity" element={<Activity />} />
+              <Route path="/student-section" element={<StudentSection />} />
               <Route path="/fees" element={<Fees />} />
               <Route path="/notice" element={<Notice />} />
               <Route path="/notifications" element={<Notifications />} />
