@@ -4,7 +4,7 @@ import { ThemeProvider } from '../context/ThemeContext.jsx';
 import { ProtectedRoute } from '../components/ProtectedRoute.jsx';
 
 // Pages
-import Dashboard from '../pages/dashboard/Dashboard.jsx';
+import Dashboard from '../pages/Dashboard.jsx';
 import Profile from '../pages/Profile.jsx';
 import Login from '../pages/auth/Login.jsx';
 import Settings from '../pages/Settings.jsx';
@@ -49,7 +49,7 @@ export default function AppRouter() {
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
             {/* 404 */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </ThemeProvider>
       </AuthProvider>

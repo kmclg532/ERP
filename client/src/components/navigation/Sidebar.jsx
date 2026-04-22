@@ -1,57 +1,76 @@
 import { NavLink } from 'react-router-dom';
+import {
+  Home,
+  Calendar,
+  CheckSquare,
+  FileText,
+  BookOpen,
+  HelpCircle,
+  CheckCircle,
+  PieChart,
+  IndianRupee,
+  ClipboardList,
+  Download,
+  MessageCircle,
+  Activity,
+  Users,
+  User,
+  Settings,
+} from 'lucide-react';
 
 const navigationGroups = [
   {
     title: 'MAIN',
     items: [
-      { label: 'Dashboard', path: '/dashboard', icon: '🏠' },
+      { label: 'Dashboard', path: '/dashboard', icon: Home },
     ],
   },
   {
     title: 'QUICK ACCESS',
     highlighted: true,
     items: [
-      { label: 'Class Routine', path: '/class-routine', icon: '📅' },
-      { label: 'Attendance', path: '/attendance', icon: '✅' },
-      { label: 'Assignment', path: '/assignment', icon: '📝' },
-      { label: 'Academic Calendar', path: '/calendar', icon: '🗓️' },
+      { label: 'Class Routine', path: '/class-routine', icon: Calendar },
+      { label: 'Attendance', path: '/attendance', icon: CheckSquare },
+      { label: 'Assignment', path: '/assignment', icon: FileText },
+      { label: 'Academic Calendar', path: '/calendar', icon: Calendar },
     ],
   },
   {
     title: 'ACADEMICS',
     items: [
-      { label: 'Examination', path: '/examination', icon: '📚' },
-      { label: 'Result', path: '/result', icon: '📊' },
+      { label: 'Examination', path: '/examination', icon: HelpCircle },
+      { label: 'Result', path: '/result', icon: CheckCircle },
+      { label: 'Quiz', path: '/quiz', icon: PieChart },
     ],
   },
   {
     title: 'ACTIVITIES',
     items: [
-      { label: 'Quiz', path: '/quiz', icon: '🧠' },
-      { label: 'Subject Planner', path: '/subject-planner', icon: '🗂️' },
-      { label: 'Feedback', path: '/feedback', icon: '💬' },
-      { label: 'Contact Activity', path: '/contact-activity', icon: '📞' },
+      { label: 'Subject Planner', path: '/subject-planner', icon: BookOpen },
+      { label: 'Feedback', path: '/feedback', icon: MessageCircle },
+      { label: 'Resolved Feedback', path: '/resolved-feedback', icon: CheckCircle },
+      { label: '100 Point Activity', path: '/activity', icon: Activity },
+      { label: 'Student Section', path: '/student-section', icon: Users },
     ],
   },
   {
     title: 'FINANCE',
     items: [
-      { label: 'Fees Report', path: '/fees', icon: '💰' },
+      { label: 'Fees', path: '/fees', icon: IndianRupee },
     ],
   },
   {
     title: 'SYSTEM',
     items: [
-      { label: 'Notice', path: '/notice', icon: '📢' },
-      { label: 'Notifications', path: '/notifications', icon: '🔔' },
-      { label: 'Downloads', path: '/downloads', icon: '⬇️' },
+      { label: 'Notice', path: '/notice', icon: ClipboardList },
+      { label: 'Downloads', path: '/downloads', icon: Download },
     ],
   },
   {
     title: 'USER',
     items: [
-      { label: 'My Profile', path: '/my-profile', icon: '👤' },
-      { label: 'Settings', path: '/settings', icon: '⚙️' },
+      { label: 'My Profile', path: '/my-profile', icon: User },
+      { label: 'Settings', path: '/settings', icon: Settings },
     ],
   },
 ];
@@ -88,7 +107,7 @@ export default function Sidebar() {
             <div className="space-y-1">
               {group.items.map((item) => (
                 <NavLink key={item.path} to={item.path} className={navLinkClassName}>
-                  <span aria-hidden="true" className="text-base leading-none">{item.icon}</span>
+                  <item.icon className="h-5 w-5 shrink-0" strokeWidth={2} aria-hidden="true" />
                   <span>{item.label}</span>
                 </NavLink>
               ))}

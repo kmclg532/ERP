@@ -5,7 +5,7 @@ import { ProtectedRoute } from '../components/ProtectedRoute.jsx';
 import MainLayout from '../layouts/MainLayout.jsx';
 
 import Login from '../pages/auth/Login.jsx';
-import Dashboard from '../pages/dashboard/Dashboard.jsx';
+import Dashboard from '../pages/Dashboard.jsx';
 import ClassRoutine from '../pages/ClassRoutine.jsx';
 import Attendance from '../pages/Attendance.jsx';
 import Assignment from '../pages/Assignment.jsx';
@@ -20,7 +20,6 @@ import Activity from '../pages/activity.jsx';
 import StudentSection from '../pages/student-section.jsx';
 import Fees from '../pages/Fees.jsx';
 import Notice from '../pages/Notice.jsx';
-import Notifications from '../pages/Notifications.jsx';
 import Downloads from '../pages/Downloads.jsx';
 import Profile from '../pages/Profile.jsx';
 import Settings from '../pages/Settings.jsx';
@@ -55,7 +54,6 @@ export default function AppRoutes() {
               <Route path="/student-section" element={<StudentSection />} />
               <Route path="/fees" element={<Fees />} />
               <Route path="/notice" element={<Notice />} />
-              <Route path="/notifications" element={<Notifications />} />
               <Route path="/downloads" element={<Downloads />} />
               <Route path="/my-profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />

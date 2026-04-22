@@ -86,6 +86,33 @@ body {
 	color: var(--text-primary);
 }
 
+::-webkit-scrollbar {
+	width: 5px;
+	height: 5px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, 0.2);
+	border-radius: 10px;
+}
+
+:root[data-theme='dark'] ::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.22);
+}
+
+* {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+:root[data-theme='dark'] * {
+	scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
 button,
 input {
 	font: inherit;

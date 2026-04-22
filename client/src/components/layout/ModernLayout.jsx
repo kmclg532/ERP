@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth.js';
 import { useTheme } from '../../context/ThemeContext.jsx';
@@ -16,7 +16,6 @@ import {
   FileText,
   Calendar,
   HelpCircle,
-  DollarSign,
   ClipboardList,
   Download,
   MessageCircle,
@@ -25,6 +24,7 @@ import {
   Users,
   Activity,
   IndianRupee,
+  Check,
 } from 'lucide-react';
 
 const navigationItems = [
@@ -36,9 +36,8 @@ const navigationItems = [
   { label: 'Examination', path: '/examination', icon: HelpCircle },
   { label: 'Result', path: '/result', icon: CheckCircle },
   { label: 'Quiz', path: '/quiz', icon: PieChart },
-  { label: 'Fees', path: '/fees', icon: DollarSign },
+  { label: 'Fees', path: '/fees', icon: IndianRupee },
   { label: 'Notice', path: '/notice', icon: ClipboardList },
-  { label: 'Notifications', path: '/notifications', icon: Bell },
   { label: 'Downloads', path: '/downloads', icon: Download },
   { label: 'Feedback', path: '/feedback', icon: MessageCircle },
   { label: 'Resolved Feedback', path: '/resolved-feedback', icon: CheckCircle },
@@ -47,7 +46,13 @@ const navigationItems = [
   { label: 'Student Section', path: '/student-section', icon: Users },
 ];
 
-function SidebarContent({ collapsed, navItemClass }) {
+const notificationsSeed = [
+  { id: 1, message: 'Attendance report is ready for review.', time: '2 min ago', read: false },
+  { id: 2, message: 'New notice posted for the current semester.', time: '15 min ago', read: false },
+  { id: 3, message: 'Fee receipt has been generated successfully.', time: '1 hr ago', read: true },
+];
+
+function SidebarContent({ collapsed, navItemClass, onNotificationsClick }) {
   return (
     <nav className="space-y-2">
       {navigationItems.map((item) => {
@@ -59,11 +64,20 @@ function SidebarContent({ collapsed, navItemClass }) {
             className={navItemClass}
             end={item.path === '/dashboard'}
           >
-            <Icon className="h-5 w-5" />
+            <Icon className="h-5 w-5 shrink-0" strokeWidth={2} />
             {!collapsed && <span>{item.label}</span>}
           </NavLink>
         );
       })}
+
+      <button
+        type="button"
+        onClick={onNotificationsClick}
+        className={navItemClass({ isActive: false })}
+      >
+        <Bell className="h-5 w-5 shrink-0" strokeWidth={2} />
+        {!collapsed && <span>Notifications</span>}
+      </button>
     </nav>
   );
 }
@@ -78,18 +92,43 @@ export default function ModernLayout({ children }) {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+  const bellRef = useRef(null);
+  const notificationsPanelRef = useRef(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState(notificationsSeed);
 
   const initials = getInitials(user?.firstName, user?.lastName);
+  const unreadCount = useMemo(
+    () => notifications.filter((notification) => !notification.read).length,
+    [notifications]
+  );
 
   // Close drawer on route change
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setDrawerOpen(false);
+    setNotificationsOpen(false);
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        bellRef.current &&
+        !bellRef.current.contains(event.target) &&
+        notificationsPanelRef.current &&
+        !notificationsPanelRef.current.contains(event.target)
+      ) {
+        setNotificationsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -111,6 +150,70 @@ export default function ModernLayout({ children }) {
         : 'text-(--text-secondary) hover:bg-(--dropdown-hover) hover:text-(--text-primary)',
     ].join(' ');
 
+  const markNotificationRead = (notificationId) => {
+    setNotifications((currentNotifications) =>
+      currentNotifications.map((notification) =>
+        notification.id === notificationId ? { ...notification, read: true } : notification
+      )
+    );
+  };
+
+  const markAllNotificationsRead = () => {
+    setNotifications((currentNotifications) =>
+      currentNotifications.map((notification) => ({ ...notification, read: true }))
+    );
+  };
+
+  const notificationPanel = (
+    <div
+      ref={notificationsPanelRef}
+      className="absolute right-0 top-full z-50 mt-3 w-80 overflow-hidden rounded-2xl border border-(--border-color) bg-(--surface) shadow-[var(--shadow-lg)]"
+    >
+      <div className="flex items-center justify-between border-b border-(--border-color) px-4 py-3">
+        <div>
+          <p className="text-sm font-semibold text-(--text-primary)">Notifications</p>
+          <p className="text-xs text-(--text-tertiary)">{unreadCount} unread</p>
+        </div>
+        <button
+          type="button"
+          onClick={markAllNotificationsRead}
+          className="text-xs font-medium text-(--color-primary) transition hover:text-(--color-primary-hover)"
+        >
+          Mark all as read
+        </button>
+      </div>
+
+      <div className="max-h-80 overflow-y-auto p-2">
+        {notifications.map((notification) => (
+          <div
+            key={notification.id}
+            className={`flex gap-3 rounded-xl px-3 py-3 transition ${
+              notification.read ? 'hover:bg-(--dropdown-hover)' : 'bg-(--color-primary-soft)'
+            }`}
+          >
+            <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-(--color-primary) text-(--color-on-primary)">
+              <Bell className="h-4 w-4" />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <p className="text-sm leading-5 text-(--text-primary)">{notification.message}</p>
+              <p className="mt-1 text-xs text-(--text-tertiary)">{notification.time}</p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => markNotificationRead(notification.id)}
+              className="mt-0.5 rounded-full p-1 text-(--text-tertiary) transition hover:bg-(--dropdown-hover) hover:text-(--text-primary)"
+              aria-label="Mark notification as read"
+            >
+              <Check className="h-4 w-4" />
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-(--bg-color)">
       {/* Navbar */}
@@ -131,9 +234,22 @@ export default function ModernLayout({ children }) {
           {/* Right Side - Desktop */}
           <div className="hidden items-center gap-4 md:flex">
             {/* Notification */}
-            <button className="rounded-lg p-2 text-(--text-secondary) transition hover:bg-(--dropdown-hover) hover:text-(--text-primary)">
-              <Bell className="h-5 w-5" />
-            </button>
+            <div className="relative" ref={bellRef}>
+              <button
+                type="button"
+                onClick={() => setNotificationsOpen((currentState) => !currentState)}
+                className="relative rounded-lg p-2 text-(--text-secondary) transition hover:bg-(--dropdown-hover) hover:text-(--text-primary)"
+                aria-haspopup="dialog"
+                aria-expanded={notificationsOpen}
+                aria-label="Toggle notifications"
+              >
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute right-1 top-1 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-(--surface)" />
+                )}
+              </button>
+              {notificationsOpen && notificationPanel}
+            </div>
 
             {/* Theme Toggle */}
             <button
@@ -179,9 +295,22 @@ export default function ModernLayout({ children }) {
           {/* Right Side - Mobile */}
           <div className="flex items-center gap-2 md:hidden">
             {/* Notification */}
-            <button className="rounded-lg p-2 text-(--text-secondary) transition hover:bg-(--dropdown-hover)">
-              <Bell className="h-5 w-5" />
-            </button>
+            <div className="relative" ref={bellRef}>
+              <button
+                type="button"
+                onClick={() => setNotificationsOpen((currentState) => !currentState)}
+                className="relative rounded-lg p-2 text-(--text-secondary) transition hover:bg-(--dropdown-hover) hover:text-(--text-primary)"
+                aria-haspopup="dialog"
+                aria-expanded={notificationsOpen}
+                aria-label="Toggle notifications"
+              >
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute right-1 top-1 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-(--surface)" />
+                )}
+              </button>
+              {notificationsOpen && notificationPanel}
+            </div>
 
             {/* Profile */}
             <button className="flex h-9 w-9 items-center justify-center rounded-lg bg-(--color-primary) text-xs font-semibold text-(--color-on-primary)">
@@ -209,7 +338,11 @@ export default function ModernLayout({ children }) {
           }`}
         >
           <div className="h-full overflow-y-auto p-4">
-            <SidebarContent collapsed={sidebarCollapsed} navItemClass={navItemClass} />
+            <SidebarContent
+              collapsed={sidebarCollapsed}
+              navItemClass={navItemClass}
+              onNotificationsClick={() => setNotificationsOpen((currentState) => !currentState)}
+            />
           </div>
         </aside>
 
@@ -261,8 +394,12 @@ export default function ModernLayout({ children }) {
         </div>
 
         {/* Drawer Content */}
-        <div className="p-4">
-          <SidebarContent collapsed={false} navItemClass={navItemClass} />
+        <div className="h-full overflow-y-auto p-4 pb-36">
+          <SidebarContent
+            collapsed={false}
+            navItemClass={navItemClass}
+            onNotificationsClick={() => setNotificationsOpen((currentState) => !currentState)}
+          />
         </div>
 
         {/* Drawer Footer - Profile & Logout */}
@@ -272,7 +409,7 @@ export default function ModernLayout({ children }) {
               navigate('/my-profile');
               setDrawerOpen(false);
             }}
-            className="mb-4 w-full flex items-center gap-3 rounded-lg border border-(--border-color) p-3 text-(--text-secondary) transition hover:bg-(--dropdown-hover) hover:text-(--text-primary)"
+            className="mb-4 flex w-full items-center gap-3 rounded-lg border border-(--border-color) p-3 text-(--text-secondary) transition hover:bg-(--dropdown-hover) hover:text-(--text-primary)"
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-(--color-primary) text-sm font-semibold text-(--color-on-primary)">
               {initials}
