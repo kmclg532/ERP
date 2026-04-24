@@ -9,6 +9,44 @@ import {
   validateRequired,
 } from '../validators/validationSchemas.js';
 
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const isProduction = NODE_ENV === 'production';
+const REFRESH_COOKIE_NAME = 'refreshToken';
+
+const parseDurationToMs = (value, fallbackMs) => {
+  if (typeof value !== 'string') {
+    return fallbackMs;
+  }
+
+  const match = value.trim().match(/^(\d+)(ms|s|m|h|d)$/i);
+  if (!match) {
+    return fallbackMs;
+  }
+
+  const amount = Number(match[1]);
+  const unit = match[2].toLowerCase();
+  const multipliers = {
+    ms: 1,
+    s: 1000,
+    m: 60 * 1000,
+    h: 60 * 60 * 1000,
+    d: 24 * 60 * 60 * 1000,
+  };
+
+  return amount * multipliers[unit];
+};
+
+const getRefreshCookieOptions = () => ({
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? 'none' : 'lax',
+  path: '/',
+  maxAge: parseDurationToMs(
+    process.env.JWT_REFRESH_EXPIRES_IN || process.env.REFRESH_TOKEN_EXPIRES_IN || '7d',
+    7 * 24 * 60 * 60 * 1000,
+  ),
+});
+
 export const register = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, password, confirmPassword } = req.body;
 
@@ -47,12 +85,7 @@ export const register = asyncHandler(async (req, res) => {
   const refreshToken = generateRefreshToken({ userId: user._id.toString(), role: user.role });
 
   // Set refresh token in cookie
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie(REFRESH_COOKIE_NAME, refreshToken, getRefreshCookieOptions());
 
   res.status(201).json({
     success: true,
@@ -74,12 +107,7 @@ export const login = asyncHandler(async (req, res) => {
   const refreshToken = generateRefreshToken({ userId: user._id.toString(), role: user.role });
 
   // Set refresh token in cookie
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie(REFRESH_COOKIE_NAME, refreshToken, getRefreshCookieOptions());
 
   res.json({
     success: true,
@@ -92,7 +120,7 @@ export const login = asyncHandler(async (req, res) => {
 });
 
 export const logout = asyncHandler(async (req, res) => {
-  res.clearCookie('refreshToken');
+  res.clearCookie(REFRESH_COOKIE_NAME, getRefreshCookieOptions());
 
   res.json({
     success: true,
@@ -102,8 +130,7 @@ export const logout = asyncHandler(async (req, res) => {
 });
 
 export const refreshToken = asyncHandler(async (req, res) => {
-  const { refreshToken } = req.cookies;
-  const tokenPayload = await validateRefreshToken(refreshToken);
+  const tokenPayload = await validateRefreshToken(req.cookies?.[REFRESH_COOKIE_NAME]);
   const accessToken = generateAccessToken(tokenPayload);
 
   res.json({

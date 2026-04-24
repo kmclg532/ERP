@@ -6,6 +6,7 @@ import DaySelector from '../components/ui/TimeTable/DaySelector';
 import TimeLine from '../components/ui/TimeTable/TimeLine';
 import TimeTableLayout from '../components/ui/TimeTable/TimeTableLayout';
 import { TIMETABLE_DATA } from '../constants/timetableData';
+import { formatIstLongDate, formatIstWeekday, getIstCurrentMinutes } from '../utils/time';
 
 /** Converts "HH:MM" → minutes from midnight */
 function toMinutes(t) {
@@ -15,13 +16,12 @@ function toMinutes(t) {
 
 /** Returns current time in minutes from midnight */
 function nowMinutes() {
-  const d = new Date();
-  return d.getHours() * 60 + d.getMinutes();
+  return getIstCurrentMinutes();
 }
 
 /** Returns today's full day name e.g. "Monday" */
 function todayName() {
-  return new Date().toLocaleDateString('en-US', { weekday: 'long' });
+  return formatIstWeekday();
 }
 
 /** Format HH:MM to 12-hour display */
@@ -79,9 +79,7 @@ export default function ClassRoutine() {
               Class Routine
             </h1>
             <p className="text-xs text-[var(--text-tertiary)]">
-              {new Date().toLocaleDateString('en-IN', {
-                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-              })}
+              {formatIstLongDate()}
             </p>
           </div>
         </div>

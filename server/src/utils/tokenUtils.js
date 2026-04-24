@@ -8,13 +8,13 @@ const getJwtSecret = () => {
   return secret;
 };
 
-const getAccessTokenExpiry = () => process.env.ACCESS_TOKEN_EXPIRES_IN || '15m';
-const getRefreshTokenExpiry = () => process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
+const getAccessTokenExpiry = () => process.env.JWT_EXPIRES_IN || process.env.ACCESS_TOKEN_EXPIRES_IN || '15m';
+const getRefreshTokenExpiry = () => process.env.JWT_REFRESH_EXPIRES_IN || process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
 
 export const generateAccessToken = ({ userId, role }) => {
   const jwtSecret = getJwtSecret();
 
-  return jwt.sign({ userId, role }, jwtSecret, {
+  return jwt.sign({ userId, role, tokenType: 'access' }, jwtSecret, {
     expiresIn: getAccessTokenExpiry(),
   });
 };
@@ -22,7 +22,7 @@ export const generateAccessToken = ({ userId, role }) => {
 export const generateRefreshToken = ({ userId, role }) => {
   const jwtSecret = getJwtSecret();
 
-  return jwt.sign({ userId, role }, jwtSecret, {
+  return jwt.sign({ userId, role, tokenType: 'refresh' }, jwtSecret, {
     expiresIn: getRefreshTokenExpiry(),
   });
 };
@@ -35,18 +35,18 @@ export const generateTokens = ({ userId, role }) => {
 };
 
 export const verifyToken = (token) => {
+  if (!token || typeof token !== 'string') {
+    throw new Error('Invalid or expired token');
+  }
+
   try {
     const jwtSecret = getJwtSecret();
 
-    return jwt.verify(token, jwtSecret);
+    return jwt.verify(token, jwtSecret, {
+      algorithms: ['HS256'],
+    });
   } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      throw new Error('Token has expired');
-    }
-    if (error.name === 'JsonWebTokenError') {
-      throw new Error('Invalid token');
-    }
-    throw error;
+    throw new Error('Invalid or expired token');
   }
 };
 

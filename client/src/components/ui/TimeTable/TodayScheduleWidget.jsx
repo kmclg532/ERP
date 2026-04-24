@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Clock, ArrowRight, BookOpen, CalendarDays } from 'lucide-react';
 import { TIMETABLE_DATA } from '../../../constants/timetableData';
+import { formatIstWeekday, getIstCurrentMinutes } from '../../../utils/time';
 
 /** Converts "HH:MM" → minutes from midnight */
 function toMinutes(t) {
@@ -23,8 +24,8 @@ function fmt12(t) {
 export default function TodayScheduleWidget() {
   const navigate = useNavigate();
   const now = new Date();
-  const todayName = now.toLocaleDateString('en-US', { weekday: 'long' });
-  const currentMin = now.getHours() * 60 + now.getMinutes();
+  const todayName = formatIstWeekday(now);
+  const currentMin = getIstCurrentMinutes(now);
 
   const todayData = TIMETABLE_DATA.find((d) => d.day === todayName);
   const slots = todayData?.slots ?? [];

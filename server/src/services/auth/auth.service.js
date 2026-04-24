@@ -35,19 +35,23 @@ export const loginUser = async ({ email, password }) => {
 
 export const validateRefreshToken = async (refreshToken) => {
   if (!refreshToken) {
-    throw new AppError('Refresh token not found', 401);
+    throw new AppError('Authentication required', 401);
   }
 
   let decoded;
   try {
     decoded = verifyToken(refreshToken);
   } catch (error) {
-    throw new AppError(error.message || 'Invalid refresh token', 401);
+    throw new AppError('Invalid or expired refresh token', 401);
+  }
+
+  if (decoded.tokenType !== 'refresh') {
+    throw new AppError('Invalid refresh token', 401);
   }
 
   const user = await User.findById(decoded.userId);
   if (!user || !user.isActive) {
-    throw new AppError('User not found', 401);
+    throw new AppError('Unauthorized', 401);
   }
 
   return {
