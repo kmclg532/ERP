@@ -10,12 +10,12 @@
 	src: url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 }
 
-@font-face{
+@font-face {
 	font-family: Helvetica;
 	src: url('../assets/fonts/Helvetica.ttf');
 }
 
-@theme{
+@theme {
 	--font-inter: Inter, sans-serif;
 	--font-helvetica: Helvetica;
 	--font-poppins: Poppins;
@@ -86,6 +86,41 @@ body {
 	color: var(--text-primary);
 }
 
+/* Cursor icon */
+
+html,
+body,
+#root,
+* {
+
+	cursor: url('./assets/icons/black_cursor.svg') 0 0, auto;
+	
+	/* cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='-12 -12 48 48'%3E%3Cpath d='M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z' fill='%23111111' stroke='%23111111' stroke-width='0.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E") 0 0, pointer; */
+}
+
+a,
+button,
+[role='button'],
+label[for],
+summary,
+select,
+input[type='checkbox'],
+input[type='radio'],
+input[type='submit'],
+input[type='button'] {
+
+	cursor: url('./assets/icons/black_cursor.svg') 0 0, pointer;
+	/* cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 26 26'%3E%3Cpath d='M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z' fill='%23111111' stroke='%23111111' stroke-width='0.2' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E") 0 0, pointer; */
+}
+
+input:not([type='checkbox']):not([type='radio']):not([type='submit']):not([type='button']),
+textarea,
+[contenteditable='true'] {
+	cursor: text;
+}
+
+/* End */
+
 ::-webkit-scrollbar {
 	width: 5px;
 	height: 5px;
@@ -143,7 +178,7 @@ input {
 	transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 	animation: auth-card-enter 420ms ease both;
 	overflow: hidden;
-	}
+}
 
 .auth-card::before {
 	content: '';
@@ -188,14 +223,14 @@ input {
 	font-size: 1.9rem;
 	line-height: 1.15;
 	letter-spacing: -0.03em;
-	}
+}
 
 .auth-subtitle {
 	margin: 0.55rem 0 0;
 	color: var(--text-secondary);
 	font-size: 0.97rem;
 	line-height: 1.5;
-	}
+}
 
 .role-toggle {
 	display: grid;
@@ -207,7 +242,7 @@ input {
 	border-radius: 999px;
 	background: var(--surface-strong);
 	box-shadow: var(--shadow-sm);
-	}
+}
 
 .role-toggle-btn {
 	border: 0;
@@ -218,18 +253,18 @@ input {
 	font-weight: 600;
 	cursor: pointer;
 	transition: background-color 160ms ease, color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
-	}
+}
 
 .role-toggle-btn:hover {
 	transform: translateY(-1px);
 	color: var(--text-primary);
-	}
+}
 
 .role-toggle-btn.active {
 	background: var(--color-primary);
 	color: var(--color-on-primary);
 	box-shadow: var(--shadow-sm);
-	}
+}
 
 .auth-copy {
 	display: flex;
@@ -249,7 +284,7 @@ input {
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
 	color: var(--text-tertiary);
-	}
+}
 
 .auth-copy strong {
 	font-size: 0.96rem;
@@ -473,4 +508,3 @@ input {
 	margin: 0;
 	color: var(--text-secondary);
 }
-
